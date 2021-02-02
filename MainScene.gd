@@ -25,11 +25,12 @@ var bestSpeed = 1.0
 var freezeSpeedLabel = false
 
 func _ready():
-	self.targets.push_back(self.spawn_target())
 	self.spawnFrequency = self.startingFrequency
+	self.targets.push_back(self.spawn_target())
 
 func spawn_target():
 	var t = Target.instance()
+	t.lifeTime = self.spawnFrequency * 2
 	var pad = t.maxRadius
 
 	var vp = get_viewport_rect().size
