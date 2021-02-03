@@ -27,9 +27,7 @@ var freezeSpeedLabel = false
 func _ready():
 	self.spawnFrequency = self.startingFrequency
 	self.targets.push_back(self.spawn_target())
-
-func _button_pressed():
-	print("button pressed")
+	self.load_game()
 
 func spawn_target():
 	var t = Target.instance()
@@ -70,6 +68,7 @@ func reset():
 		self.freezeSpeedLabel = true
 		get_tree().create_timer(2.0).connect("timeout", self, "unfreezeSpeedLabel")
 		get_tree().create_timer(2.0).connect("timeout", self, "resetCurrentSpeedColor")
+		self.save_game()
 
 	self.spawnFrequency  = min(self.spawnFrequency * 2, self.startingFrequency)
 	self.updateLabel()
@@ -100,6 +99,34 @@ func _input(event):
 func resetCurrentSpeedColor():
 	self.speed_label.add_color_override("font_color", Color(1,1,1))
 
-
 func _on_Button_pressed():
 	get_tree().paused = !get_tree().paused
+
+func save():
+	var save_dict = {
+		"best_speed" : self.bestSpeed,
+	}
+	return save_dict
+
+func load_game():
+	var save_game = File.new()
+	if not save_game.file_exists("user://savegame.save"):
+		return # Error! We don't have a save to load.
+
+	save_game.open("user://savegame.save", File.READ)
+	while save_game.get_position() < save_game.get_len():
+		# Get the saved dictionary from the next line in the save file
+		var data = parse_json(save_game.get_line())
+		
+		for i in data.keys():
+			if i == "best_speed":
+				self.bestSpeed = data[i]
+
+	save_game.close()
+
+func save_game():
+	var save_game = File.new()
+	save_game.open("user://savegame.save", File.WRITE)
+	var data = self.save()
+	save_game.store_line(to_json(data))
+	save_game.close()
