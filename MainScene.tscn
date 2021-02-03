@@ -10,6 +10,7 @@ margin_left = 5.65512
 margin_top = 5.72111
 margin_right = 45.6551
 margin_bottom = 19.7211
+text = "1.0 targets/second"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -19,6 +20,19 @@ margin_left = 5.39732
 margin_top = 24.0001
 margin_right = 45.3973
 margin_bottom = 38.0001
+text = "2.0 (best)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button" type="Button" parent="."]
+pause_mode = 2
+margin_left = 5.0
+margin_top = 43.0
+margin_right = 63.0
+margin_bottom = 63.0
+text = "pause"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

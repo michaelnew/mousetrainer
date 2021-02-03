@@ -28,6 +28,9 @@ func _ready():
 	self.spawnFrequency = self.startingFrequency
 	self.targets.push_back(self.spawn_target())
 
+func _button_pressed():
+	print("button pressed")
+
 func spawn_target():
 	var t = Target.instance()
 	t.lifeTime = self.spawnFrequency * 2
@@ -96,3 +99,7 @@ func _input(event):
 	
 func resetCurrentSpeedColor():
 	self.speed_label.add_color_override("font_color", Color(1,1,1))
+
+
+func _on_Button_pressed():
+	get_tree().paused = !get_tree().paused
