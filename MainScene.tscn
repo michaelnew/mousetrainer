@@ -31,7 +31,8 @@ margin_left = 5.0
 margin_top = 43.0
 margin_right = 63.0
 margin_bottom = 63.0
-text = "pause"
+text = "back"
+flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -100,7 +100,8 @@ func resetCurrentSpeedColor():
 	self.speed_label.add_color_override("font_color", Color(1,1,1))
 
 func _on_Button_pressed():
-	get_tree().paused = !get_tree().paused
+	#get_tree().paused = !get_tree().paused
+	get_tree().change_scene("res://MainMenu.tscn")
 
 func save():
 	var save_dict = {
