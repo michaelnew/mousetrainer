@@ -4,29 +4,21 @@ var Target = preload("res://target.tscn")
 onready var speed_label = get_node("speed_label")
 onready var best_speed_label = get_node("best_speed_label")
 
-var green = Color(181/255.0, 214/255.0, 61/255.0)
-var lightBlue = Color(0.02, 0.671, 0.294)
-var darkBlue = Color(0.004, 0.831, 0.271)
-var mediumBlue = Color(0.004, 0.282, 0.282)
-var yellow = Color(0.051, 0.298, 0.267)
-var orange = Color(0.059, 0.345, 0.384)
-var lightOrange = Color(0.059, 0.98, 0.894)
-var brown = Color(0.047, 0.153, 0.38)
-
 var accumulator = 0
 var lastSpawnTime = 0
 var lastSpeedupTime = 0
 
-var startingFrequency = 1.0
 var spawnFrequency: float
 var targets = Array()
 
-var bestSpeed = 1.0
+var bestSpeed: float
 var freezeSpeedLabel = false
 
 func _ready():
-	self.spawnFrequency = self.startingFrequency
-	self.targets.push_back(self.spawn_target())
+	self.spawnFrequency = StateManager.getStartFrequency()
+	self.bestSpeed = self.spawnFrequency
+	for i in StateManager.getSpawnCount():
+		self.targets.push_back(self.spawn_target())
 	self.load_game()
 
 func spawn_target():
@@ -46,7 +38,8 @@ func _process(delta):
 	self.accumulator += delta
 
 	if self.accumulator - self.lastSpawnTime > self.spawnFrequency:
-		self.targets.push_back(self.spawn_target())
+		for i in StateManager.getSpawnCount():
+			self.targets.push_back(self.spawn_target())
 		self.lastSpawnTime = self.accumulator
 	
 	if self.accumulator - self.lastSpeedupTime > 1.0:
@@ -54,7 +47,7 @@ func _process(delta):
 		self.lastSpeedupTime = self.accumulator
 		if self.spawnFrequency < self.bestSpeed:
 			self.bestSpeed = self.spawnFrequency
-			self.speed_label.add_color_override("font_color", self.green)
+			self.speed_label.add_color_override("font_color", StateManager.green)
 		self.updateLabel()
 		
 	for t in self.targets:
@@ -70,7 +63,7 @@ func reset():
 		get_tree().create_timer(2.0).connect("timeout", self, "resetCurrentSpeedColor")
 		self.save_game()
 
-	self.spawnFrequency  = min(self.spawnFrequency * 2, self.startingFrequency)
+	self.spawnFrequency  = min(self.spawnFrequency * 2, StateManager.getStartFrequency())
 	self.updateLabel()
 
 	for t in self.targets: remove_child(t)
@@ -82,8 +75,8 @@ func reset():
 
 func updateLabel():
 	if !self.freezeSpeedLabel:
-		self.speed_label.text = str(int(1.0/self.spawnFrequency*100)/100.0) + " targets/second"
-	self.best_speed_label.text = str(int(1.0/self.bestSpeed*100)/100.0) + " (best)"
+		self.speed_label.text = str(int(StateManager.getSpawnCount()/self.spawnFrequency*100)/100.0) + " targets/second"
+	self.best_speed_label.text = str(int(StateManager.getSpawnCount()/self.bestSpeed*100)/100.0) + " (best)"
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
@@ -100,7 +93,6 @@ func resetCurrentSpeedColor():
 	self.speed_label.add_color_override("font_color", Color(1,1,1))
 
 func _on_Button_pressed():
-	#get_tree().paused = !get_tree().paused
 	get_tree().change_scene("res://MainMenu.tscn")
 
 func save():

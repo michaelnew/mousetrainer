@@ -19,6 +19,10 @@ config/name="Mouse Trainer"
 run/main_scene="res://MainMenu.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+StateManager="*res://StateManager.gd"
+
 [display]
 
 window/size/width=1920

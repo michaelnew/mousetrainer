@@ -20,4 +20,12 @@ func _ready():
 
 
 func _on_MenuButton_pressed():
+	StateManager.gameType = StateManager.GameType.SLOW_PUSH
 	get_tree().change_scene_to(player)
+
+func _on_MenuButton2_pressed():
+	StateManager.gameType = StateManager.GameType.BURST
+	get_tree().change_scene_to(player)
+
+func _on_MenuButton6_pressed():
+	StateManager.reset_save_game()
