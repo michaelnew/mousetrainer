@@ -11,15 +11,13 @@ var lastSpeedupTime = 0
 var spawnFrequency: float
 var targets = Array()
 
-var bestSpeed: float
 var freezeSpeedLabel = false
 
 func _ready():
 	self.spawnFrequency = StateManager.getStartFrequency()
-	self.bestSpeed = self.spawnFrequency
 	for i in StateManager.getSpawnCount():
 		self.targets.push_back(self.spawn_target())
-	self.load_game()
+	self.updateLabel()
 
 func spawn_target():
 	var t = Target.instance()
@@ -45,8 +43,8 @@ func _process(delta):
 	if self.accumulator - self.lastSpeedupTime > 1.0:
 		self.spawnFrequency *= .98
 		self.lastSpeedupTime = self.accumulator
-		if self.spawnFrequency < self.bestSpeed:
-			self.bestSpeed = self.spawnFrequency
+		if self.spawnFrequency < StateManager.bestSpeed:
+			StateManager.bestSpeed = self.spawnFrequency
 			self.speed_label.add_color_override("font_color", StateManager.green)
 		self.updateLabel()
 		
@@ -57,11 +55,11 @@ func unfreezeSpeedLabel():
 	self.freezeSpeedLabel = false
 	
 func reset():
-	if self.spawnFrequency >= self.bestSpeed:
+	if self.spawnFrequency >= StateManager.bestSpeed:
 		self.freezeSpeedLabel = true
 		get_tree().create_timer(2.0).connect("timeout", self, "unfreezeSpeedLabel")
 		get_tree().create_timer(2.0).connect("timeout", self, "resetCurrentSpeedColor")
-		self.save_game()
+		StateManager.save_game()
 
 	self.spawnFrequency  = min(self.spawnFrequency * 2, StateManager.getStartFrequency())
 	self.updateLabel()
@@ -76,7 +74,7 @@ func reset():
 func updateLabel():
 	if !self.freezeSpeedLabel:
 		self.speed_label.text = str(int(StateManager.getSpawnCount()/self.spawnFrequency*100)/100.0) + " targets/second"
-	self.best_speed_label.text = str(int(StateManager.getSpawnCount()/self.bestSpeed*100)/100.0) + " (best)"
+	self.best_speed_label.text = str(int(StateManager.getSpawnCount()/StateManager.bestSpeed*100)/100.0) + " (best)"
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
@@ -94,32 +92,3 @@ func resetCurrentSpeedColor():
 
 func _on_Button_pressed():
 	get_tree().change_scene("res://MainMenu.tscn")
-
-func save():
-	var save_dict = {
-		"best_speed" : self.bestSpeed,
-	}
-	return save_dict
-
-func load_game():
-	var save_game = File.new()
-	if not save_game.file_exists("user://savegame.save"):
-		return # Error! We don't have a save to load.
-
-	save_game.open("user://savegame.save", File.READ)
-	while save_game.get_position() < save_game.get_len():
-		# Get the saved dictionary from the next line in the save file
-		var data = parse_json(save_game.get_line())
-		
-		for i in data.keys():
-			if i == "best_speed":
-				self.bestSpeed = data[i]
-
-	save_game.close()
-
-func save_game():
-	var save_game = File.new()
-	save_game.open("user://savegame.save", File.WRITE)
-	var data = self.save()
-	save_game.store_line(to_json(data))
-	save_game.close()

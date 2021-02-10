@@ -1,23 +1,7 @@
 extends MarginContainer
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
+#preload the player since we're definitely going to use it
 var player = preload("res://MainScene.tscn")
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 
 func _on_MenuButton_pressed():
 	StateManager.gameType = StateManager.GameType.SLOW_PUSH

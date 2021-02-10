@@ -98,11 +98,16 @@ margin_top = 245.0
 margin_right = 1680.0
 margin_bottom = 290.0
 custom_fonts/font = ExtResource( 1 )
+toggle_mode = false
+shortcut_in_tooltip = false
 text = "RESET HIGH SCORES"
+clip_text = true
 align = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="button_down" from="VBoxContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_button_down"]
+[connection signal="button_up" from="VBoxContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_button_up"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/MenuButton2" to="." method="_on_MenuButton2_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/MenuButton6" to="." method="_on_MenuButton6_pressed"]
