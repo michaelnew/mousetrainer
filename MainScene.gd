@@ -3,6 +3,8 @@ extends Node2D
 var Target = preload("res://target.tscn")
 onready var speed_label = get_node("speed_label")
 onready var best_speed_label = get_node("best_speed_label")
+onready var leftBorder = get_node("HBoxContainer/ColorRect")
+onready var rightBorder = get_node("HBoxContainer/ColorRect2")
 
 var accumulator = 0
 var lastSpawnTime = 0
@@ -18,6 +20,8 @@ func _ready():
 	for i in StateManager.getSpawnCount():
 		self.targets.push_back(self.spawn_target())
 	self.updateLabel()
+	leftBorder.color = StateManager.clear
+	rightBorder.color = StateManager.clear
 
 func spawn_target():
 	var t = Target.instance()
@@ -46,6 +50,8 @@ func _process(delta):
 		if self.spawnFrequency < StateManager.bestSpeed:
 			StateManager.bestSpeed = self.spawnFrequency
 			self.speed_label.add_color_override("font_color", StateManager.green)
+			self.leftBorder.color = StateManager.green
+			self.rightBorder.color = StateManager.green
 		self.updateLabel()
 		
 	for t in self.targets:
@@ -70,6 +76,8 @@ func reset():
 	self.accumulator = -1 # give an extra second after clearing the board
 	self.lastSpawnTime = 0
 	self.lastSpeedupTime = 0
+	leftBorder.color = StateManager.clear
+	rightBorder.color = StateManager.clear
 
 func updateLabel():
 	if !self.freezeSpeedLabel:
