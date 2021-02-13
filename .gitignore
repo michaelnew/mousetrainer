@@ -10,4 +10,5 @@ export_presets.cfg
 .mono/
 data_*/
 
-build
+# don't ignore build folder on release branch so we can host on github pages
+#build
