@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://fonts/bebasneue_dynamicfont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://MainMenu.gd" type="Script" id=2]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=3]
 
 [node name="MarginContainer" type="MarginContainer"]
 anchor_right = 1.0
@@ -23,26 +24,26 @@ margin_bottom = 1000.0
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
 margin_right = 1680.0
-margin_bottom = 81.0
+margin_bottom = 113.0
 
 [node name="Label" type="Label" parent="VBoxContainer/CenterContainer"]
-margin_left = 760.0
-margin_right = 920.0
-margin_bottom = 81.0
+margin_left = 729.0
+margin_right = 950.0
+margin_bottom = 113.0
 custom_fonts/font = ExtResource( 1 )
 text = "MOUSE  TRAINER
 "
 uppercase = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
-margin_top = 85.0
+margin_top = 117.0
 margin_right = 1680.0
-margin_bottom = 375.0
+margin_bottom = 515.0
 
 [node name="MenuButton" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
 margin_right = 1680.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 63.0
+custom_fonts/font = ExtResource( 3 )
 text = "SLOW PUSH"
 align = 0
 __meta__ = {
@@ -50,10 +51,10 @@ __meta__ = {
 }
 
 [node name="MenuButton2" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
-margin_top = 49.0
+margin_top = 67.0
 margin_right = 1680.0
-margin_bottom = 94.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 130.0
+custom_fonts/font = ExtResource( 3 )
 text = "BURST"
 align = 0
 __meta__ = {
@@ -61,10 +62,10 @@ __meta__ = {
 }
 
 [node name="MenuButton3" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
-margin_top = 98.0
+margin_top = 134.0
 margin_right = 1680.0
-margin_bottom = 143.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 197.0
+custom_fonts/font = ExtResource( 3 )
 text = "INTERVALS"
 align = 0
 __meta__ = {
@@ -72,10 +73,10 @@ __meta__ = {
 }
 
 [node name="MenuButton4" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
-margin_top = 147.0
+margin_top = 201.0
 margin_right = 1680.0
-margin_bottom = 192.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 264.0
+custom_fonts/font = ExtResource( 3 )
 text = "CONSTANT"
 align = 0
 __meta__ = {
@@ -83,10 +84,10 @@ __meta__ = {
 }
 
 [node name="MenuButton5" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
-margin_top = 196.0
+margin_top = 268.0
 margin_right = 1680.0
-margin_bottom = 241.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 331.0
+custom_fonts/font = ExtResource( 3 )
 text = "PATHWAY"
 align = 0
 __meta__ = {
@@ -94,10 +95,10 @@ __meta__ = {
 }
 
 [node name="MenuButton6" type="MenuButton" parent="VBoxContainer/VBoxContainer"]
-margin_top = 245.0
+margin_top = 335.0
 margin_right = 1680.0
-margin_bottom = 290.0
-custom_fonts/font = ExtResource( 1 )
+margin_bottom = 398.0
+custom_fonts/font = ExtResource( 3 )
 toggle_mode = false
 shortcut_in_tooltip = false
 text = "RESET HIGH SCORES"
