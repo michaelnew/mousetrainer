@@ -1,36 +1,49 @@
 extends Node
 
 enum GameType {
-	SLOW_PUSH = 1,
+	LINEAR = 1,
 	BURST = 2,
 }
 
-var gameType = GameType.SLOW_PUSH
-var bestSpeed = 1.0
+var gameType = GameType.LINEAR
+var bestSpeedLinear = 1.0
+var bestSpeedBurst = 2.0
 
 func _ready():
 	self.load_game()
 
 func getSpawnCount():
 	match self.gameType:
-		GameType.SLOW_PUSH:
+		GameType.LINEAR:
 			return 1
 		GameType.BURST:
 			return 2
 
 func getStartFrequency():
 	match self.gameType:
-		GameType.SLOW_PUSH:
+		GameType.LINEAR:
 			return 1.0
 		GameType.BURST:
 			return 2.0
 
 func getBestSpeed():
-	return self.bestSpeed
+	match self.gameType:
+		GameType.LINEAR:
+			return self.bestSpeedLinear
+		GameType.BURST:
+			return self.bestSpeedBurst
+
+func setBestSpeed(speed):
+	match self.gameType:
+		GameType.LINEAR:
+			self.bestSpeedLinear = speed
+		GameType.BURST:
+			self.bestSpeedBurst = speed
 
 func save():
 	var save_dict = {
-		"best_speed" : self.bestSpeed,
+		"best_speed_linear" : self.bestSpeedLinear,
+		"best_speed_burst" : self.bestSpeedBurst,
 	}
 	return save_dict
 
@@ -45,8 +58,10 @@ func load_game():
 		var data = parse_json(save_game.get_line())
 		
 		for i in data.keys():
-			if i == "best_speed":
-				self.bestSpeed = data[i]
+			if i == "best_speed_linear":
+				self.bestSpeedLinear = data[i]
+			elif i == "best_speed_burst":
+				self.bestSpeedBurst = data[i]
 
 	save_game.close()
 
@@ -61,8 +76,10 @@ func save_game():
 func reset_save_game():
 	var dir = Directory.new()
 	dir.remove("user://savegame.save")
+	self.bestSpeedLinear = 10.0
+	self.bestSpeedBurst = 10.0
 
-# could probably move this kind of thing into a constants file or something
+# could probably move this kind of thing into a constants file
 var green = Color(181/255.0, 214/255.0, 61/255.0)
 var lightBlue = Color(0.02, 0.671, 0.294)
 var darkBlue = Color(0.004, 0.831, 0.271)

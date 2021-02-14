@@ -3,8 +3,7 @@ extends Node2D
 var Target = preload("res://target.tscn")
 onready var speed_label = get_node("speed_label")
 onready var best_speed_label = get_node("best_speed_label")
-onready var leftBorder = get_node("HBoxContainer/ColorRect")
-onready var rightBorder = get_node("HBoxContainer/ColorRect2")
+var borderColor = StateManager.clear
 
 var accumulator = 0
 var lastSpawnTime = 0
@@ -20,8 +19,6 @@ func _ready():
 	for i in StateManager.getSpawnCount():
 		self.targets.push_back(self.spawn_target())
 	self.updateLabel()
-	leftBorder.color = StateManager.clear
-	rightBorder.color = StateManager.clear
 
 func spawn_target():
 	var t = Target.instance()
@@ -36,6 +33,13 @@ func spawn_target():
 	add_child(t)
 	return t
 
+func _draw():
+	var vp = get_viewport().get_visible_rect().size
+	draw_rect(Rect2(0,0,1,vp.y), self.borderColor)
+	draw_rect(Rect2(0,0,vp.x,1), self.borderColor)
+	draw_rect(Rect2(vp.x-1,0,vp.x,vp.y), self.borderColor)
+	draw_rect(Rect2(0,vp.y-1,vp.x,1), self.borderColor)
+
 func _process(delta):
 	self.accumulator += delta
 
@@ -47,11 +51,11 @@ func _process(delta):
 	if self.accumulator - self.lastSpeedupTime > 1.0:
 		self.spawnFrequency *= .98
 		self.lastSpeedupTime = self.accumulator
-		if self.spawnFrequency < StateManager.bestSpeed:
-			StateManager.bestSpeed = self.spawnFrequency
+		if self.spawnFrequency < StateManager.getBestSpeed():
+			StateManager.setBestSpeed(self.spawnFrequency)
 			self.speed_label.add_color_override("font_color", StateManager.green)
-			self.leftBorder.color = StateManager.green
-			self.rightBorder.color = StateManager.green
+			self.borderColor = StateManager.green
+			update()
 		self.updateLabel()
 		
 	for t in self.targets:
@@ -61,7 +65,7 @@ func unfreezeSpeedLabel():
 	self.freezeSpeedLabel = false
 	
 func reset():
-	if self.spawnFrequency >= StateManager.bestSpeed:
+	if self.spawnFrequency >= StateManager.getBestSpeed():
 		self.freezeSpeedLabel = true
 		get_tree().create_timer(2.0).connect("timeout", self, "unfreezeSpeedLabel")
 		get_tree().create_timer(2.0).connect("timeout", self, "resetCurrentSpeedColor")
@@ -76,13 +80,13 @@ func reset():
 	self.accumulator = -1 # give an extra second after clearing the board
 	self.lastSpawnTime = 0
 	self.lastSpeedupTime = 0
-	leftBorder.color = StateManager.clear
-	rightBorder.color = StateManager.clear
+	self.borderColor = StateManager.clear
+	update()
 
 func updateLabel():
 	if !self.freezeSpeedLabel:
 		self.speed_label.text = str(int(StateManager.getSpawnCount()/self.spawnFrequency*100)/100.0) + " targets/second"
-	self.best_speed_label.text = str(int(StateManager.getSpawnCount()/StateManager.bestSpeed*100)/100.0) + " (best)"
+	self.best_speed_label.text = str(int(StateManager.getSpawnCount()/StateManager.getBestSpeed()*100)/100.0) + " (best)"
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
