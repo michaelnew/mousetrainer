@@ -4,7 +4,7 @@ extends MarginContainer
 var player = preload("res://MainScene.tscn")
 
 func _on_MenuButton_pressed():
-	StateManager.gameType = StateManager.GameType.SLOW_PUSH
+	StateManager.gameType = StateManager.GameType.LINEAR
 	get_tree().change_scene_to(player)
 
 func _on_MenuButton2_pressed():

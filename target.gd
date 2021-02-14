@@ -13,6 +13,10 @@ onready var sprite = get_node("Sprite")
 func _ready():
 	self.scaleSprite()
 	self.radius = self.minRadius
+
+# could draw these procedurally if we can figure out how to antialias
+#func _draw():
+#	draw_circle(Vector2(170, 170), 20, "#FFFFFF")
 	
 func scaleSprite():
 	self.radius = self.minRadius + ((self.maxRadius - self.minRadius) * self.life / self.lifeTime)
