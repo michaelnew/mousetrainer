@@ -16,22 +16,26 @@ var freezeSpeedLabel = false
 
 func _ready():
 	self.spawnFrequency = StateManager.getStartFrequency()
-	for i in StateManager.getSpawnCount():
-		self.targets.push_back(self.spawn_target())
+	self.targets += self.spawn_target(StateManager.getSpawnCount())
 	self.updateLabel()
 
-func spawn_target():
-	var t = Target.instance()
-	t.lifeTime = self.spawnFrequency * 2
-	var pad = t.maxRadius
-
-	var vp = get_viewport_rect().size
-	var x = rand_range(pad, vp.x - pad)
-	var y = rand_range(pad, vp.y - pad)
-	t.position = Vector2(x, y)
+func spawn_target(count):
+	var newTargets = Array()
+	var r = StateManager.getSpawnArea(get_viewport_rect().size)
 	
-	add_child(t)
-	return t
+	for i in count:
+		var t = Target.instance()
+		t.lifeTime = self.spawnFrequency * 2
+		var pad = t.maxRadius
+		
+		var x = rand_range(r.position.x + pad, r.position.x + r.size.x - pad)
+		var y = rand_range(r.position.y + pad, r.position.y + r.size.y - pad)
+		t.position = Vector2(x, y)
+	
+		add_child(t)
+		newTargets.push_back(t)
+		
+	return newTargets
 
 func _draw():
 	var vp = get_viewport().get_visible_rect().size
@@ -44,10 +48,9 @@ func _process(delta):
 	self.accumulator += delta
 
 	if self.accumulator - self.lastSpawnTime > self.spawnFrequency:
-		for i in StateManager.getSpawnCount():
-			self.targets.push_back(self.spawn_target())
+		self.targets += self.spawn_target(StateManager.getSpawnCount())
 		self.lastSpawnTime = self.accumulator
-	
+
 	if self.accumulator - self.lastSpeedupTime > 1.0:
 		self.spawnFrequency *= .98
 		self.lastSpeedupTime = self.accumulator
@@ -57,7 +60,7 @@ func _process(delta):
 			self.borderColor = StateManager.green
 			update()
 		self.updateLabel()
-		
+
 	for t in self.targets:
 		if t.dead: self.reset()
 

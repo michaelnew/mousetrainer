@@ -19,6 +19,14 @@ func getSpawnCount():
 		GameType.BURST:
 			return 2
 
+func getSpawnArea(size):
+	if self.gameType == GameType.BURST:
+		var box = size.y * 0.45
+		return Rect2(rand_range(0, size.x - box), rand_range(0, size.y - box), box, box)
+	else:
+		return Rect2(0, 0, size.x, size.y)
+		
+
 func getStartFrequency():
 	match self.gameType:
 		GameType.LINEAR:
